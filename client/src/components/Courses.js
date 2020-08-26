@@ -3,15 +3,25 @@ import { Link } from 'react-router-dom';
 
 class Courses extends Component {
   state = {
-    courses: [],
+    courses: []
   };
 
   componentDidMount() {
-    this.fetchCourses();
+    this.getCourses();
   }
 
-  fetchCourses = async () => {
+  getCourses = async () => {
+    const { context } = this.props;
+    try {
 
+    } catch (error) {
+
+    }
+  }
+
+  render() {
+    return (
+    );
   }
 }
 export default Courses;
