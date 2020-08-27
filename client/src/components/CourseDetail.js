@@ -14,9 +14,7 @@ class CourseDetail extends Component {
   }
 
   render() {
-    return (
-
-    );
+    return
   }
 }
 

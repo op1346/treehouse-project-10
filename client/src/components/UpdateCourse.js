@@ -14,8 +14,6 @@ export default class UpdateCourse extends Component {
   }
 
   render() {
-    return (
-
-    );
+    return
   }
 }

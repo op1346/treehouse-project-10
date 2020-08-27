@@ -13,8 +13,6 @@ export default class CreateCourse extends Component {
   }
 
   render() {
-    return (
-
-    );
+    return
   }
 }
