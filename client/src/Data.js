@@ -47,16 +47,15 @@ export default class Data {
     }
   }
 
-  async getCourses() {
-    const response = await this.api('/courses', 'GET');
+  async getCourse() {
+    const response = await this.api('/courses', 'GET',);
     if (response.status === 200) {
-      const courses = await response.json().then((data) => data);;
-      return courses;
-    } else if (response.status === 400) {
-      return response.json().then((data) => {
-        return data.errors;
-      })
-    } else {
+      return response.json().then(data => data);
+    }
+    else if (response.status === 404) {
+      return null;
+    }
+    else {
       throw new Error();
     }
   }

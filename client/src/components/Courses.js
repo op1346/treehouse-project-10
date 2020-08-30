@@ -8,18 +8,15 @@ class Courses extends Component {
 
   componentDidMount() {
     const { context } = this.props;
-
-    context.data
-      .getCourses()
-      .then((courses) => {
-        if (courses) {
-          this.setState({courses});
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        this.props.history.push('/error');
-      })
+    context.data.getCourse().then(response => {
+      this.setState({
+        courses: response
+      });
+    })
+    .catch( err => {
+      console.log(err);
+      this.props.history.push('/error');
+    });
   }
 
   render() {
@@ -35,6 +32,7 @@ class Courses extends Component {
         </Link>
       </div>
     ));
+
     return (
       <div className="bounds">
         {courses}
