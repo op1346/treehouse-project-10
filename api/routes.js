@@ -115,16 +115,7 @@ router.post('/users', [
 
 // GET /api/course 200 - returns a list of courses (including the user that owns each course)
 router.get('/courses', asyncHandler(async(req, res) => {
-  const courses = await Course.findAll({
-    attributes: {
-      exclude: ['createdAt', 'updatedAt']
-    },
-    include: {
-      model: User,
-      as: 'user',
-      attributes: ['id', 'firstName', 'lastName', 'emailAddress']
-    }
-  });
+  const courses = await Course.findAll();
   if (courses) {
     res.json(courses)
     res.status(200).end();
@@ -135,7 +126,16 @@ router.get('/courses', asyncHandler(async(req, res) => {
 
 // GET /api/course/:id 200 - returns the course (including the user that owns the course) for the provided course ID
 router.get('/courses/:id', asyncHandler(async(req, res) => {
-  const course = await Course.findByPk(req.params.id);
+  const course = await Course.findByPk(req.params.id, {
+    attributes: {
+      exclude: ['createdAt', 'updatedAt']
+    },
+    include: {
+      model: User,
+      as: 'user',
+      attributes: ['id', 'firstName', 'lastName', 'emailAddress']
+    }
+  });
   if(course) {
     res.json(course);
     res.status(200).end();

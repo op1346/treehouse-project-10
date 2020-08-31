@@ -53,7 +53,7 @@ export default class CourseDetail extends Component {
             <div className="grid-100">
               <span>
                 {authenticatedUser ? (
-                  authenticatedUser.emailAddress === user.emailAddress ? (
+                  authenticatedUser.Email === user.emailAddress ? (
                     <React.Fragment>
                       <Link
                         className="button"
@@ -105,7 +105,7 @@ export default class CourseDetail extends Component {
                 <li className="course--stats--list--item">
                   <h4>Materials Needed</h4>
                   <ul>
-                  <React Markdown source={this.state.materialsNeeded} />
+                  <ReactMarkdown source={this.state.materialsNeeded} />
                   </ul>
                 </li>
               </ul>

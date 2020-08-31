@@ -6,7 +6,7 @@ class Courses extends Component {
     courses: []
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     const { context } = this.props;
     context.data.getCourse().then(response => {
       this.setState({
