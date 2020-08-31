@@ -3,46 +3,47 @@ import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 
 export default class CourseDetail extends Component {
-  state = {
-    courseDetails: {},
-    user: '',
-    materialsNeeded: []
+  constructor(props) {
+    super(props)
+    this.state = {
+      title: '',
+      description: '',
+      estimatedTime: '',
+      materialsNeeded: '',
+      user: '',
+      authenticatedUser: '',
+      courseId: ''
+    }
   }
-  componentDidMount() {
+
+  async componentDidMount() {
     const { context } = this.props;
     const { id } = this.props.match.params;
     context.data
-      .getCourse(id)
-      .then((response) => {
-        if (response) {
-          let materialsNeeded = response.course.materialsNeeded;
-          if(materialsNeeded !== null) {
-            materialsNeeded = materialsNeeded.split('\n');
-          } else {
-            materialsNeeded = [];
-          }
+      .getCourseDetails(id)
+      .then(response => {
         this.setState({
-          courseDetails: response.course,
-          user: response.course.owner,
-          materialsNeeded: materialsNeeded,
-          authenticatedUser: context.authenticatedUser
+          title: response.title,
+          description: response.description,
+          estimatedTime: response.estimatedTime,
+          materialsNeeded: response.materialsNeeded,
+          user: response.user,
+          authenticatedUser: context.authenticatedUser,
+          courseId: id
         });
-      } else {
-        this.props.history.push('/error');
-      }
       })
       .catch((err) => {
         console.log(err);
-        this.props.history.push('/NotFound');
+        this.props.history.push('/errors');
       });
   }
 
   render() {
     const {
-      courseDetails,
-      user,
-      materialsNeeded,
-      authenticatedUser
+      title,
+      courseId,
+      authenticatedUser,
+      user
     } = this.state;
 
     return (
@@ -56,13 +57,14 @@ export default class CourseDetail extends Component {
                     <React.Fragment>
                       <Link
                         className="button"
-                        to={`/courses/${courseDetails.id}/update`}
+                        to={`/courses/${courseId}/update`}
                       >
                         Update Course
                       </Link>
                       <Link
                         className="button"
-                        to={`/courses/delete/${courseDetails.id}`}
+                        onClick={this.deleteCourse}
+                        to={`/courses/delete/${courseId}`}
                       >
                         Delete Course
                       </Link>
@@ -84,14 +86,13 @@ export default class CourseDetail extends Component {
           <div className="grid-66">
             <div className="course--header">
               <h4 className="course--label">Course</h4>
-              <h3 className="course--title">{courseDetails.title}</h3>
+              <h3 className="course--title">{title}</h3>
               <p>
-                {" "}
-                By {user.firstName} {user.lastName}
+                By {this.state.user.firstName} {this.state.user.lastName}
               </p>
             </div>
             <div className="course--description">
-              <ReactMarkdown>{courseDetails.description}</ReactMarkdown>
+              <ReactMarkdown>{this.state.description}</ReactMarkdown>
             </div>
           </div>
           <div className="grid-25 grid-right">
@@ -99,14 +100,12 @@ export default class CourseDetail extends Component {
               <ul className="course--stats--list">
                 <li className="course--stats--list--item">
                   <h4>Estimated Time</h4>
-                  <h3>{courseDetails.estimatedTime}</h3>
+                  <h3>{this.state.estimatedTime}</h3>
                 </li>
                 <li className="course--stats--list--item">
                   <h4>Materials Needed</h4>
                   <ul>
-                    {materialsNeeded.map((material) => (
-                      <li key={material}>{material}</li>
-                    ))}
+                  <React Markdown source={this.state.materialsNeeded} />
                   </ul>
                 </li>
               </ul>

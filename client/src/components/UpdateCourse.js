@@ -1,68 +1,62 @@
 import React, { Component } from "react";
 import Form from "./Form";
+
 // class to update the course
 export default class UpdateCourse extends Component {
-  state = {
-    courseId: "",
-    title: "",
-    firstName: "",
-    lastName: "",
-    description: "",
-    estimatedTime: "",
-    materialsNeeded: "",
-    userId: "",
-    errors: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      courseId: "",
+      title: "",
+      description: "",
+      estimatedTime: "",
+      materialsNeeded: "",
+      user: '',
+      userId: "",
+      errors: [],
+    }
+  }
 
   componentDidMount() {
     const { context } = this.props;
-    const { authenticatedUser } = context;
-    const { id } = this.props.match.params;
+    const authUser = this.props.context.authenticatedUser;
 
     context.data
       // Get the course details by its id and update
-      .getCourseDetails(id)
-      .then((response) => {
-        if (response) {
-          const user = response.course.owner;
+      .getCourseDetails(this.props.match.params.id)
+      .then(course => {
+        if (course) {
           this.setState({
-            courseId: id,
-            title: response.course.title,
-            courseByFirstName: user.firstName,
-            courseByLastName: user.lastName,
-            courseByEmailAddress: user.emailAddress,
-            description: response.course.description,
-            estimatedTime: response.course.estimatedTime,
-            materialsNeeded: response.course.materialsNeeded,
-            authenticatedUserEmailAddress: authenticatedUser.emailAddress,
-            userId: response.course.userId,
+            title: course.title,
+            description: course.description,
+            estimatedTime: course.estimatedTime,
+            materialsNeeded: course.materialsNeeded,
+            user: course.user,
+            courseId: course.id,
+            userId: course.userId
           });
-        } else {
-          this.props.history.push("/notfound");
         }
-
-        if (
-          this.state.courseByEmailAddress !==
-          this.state.authenticatedUserEmailAddress
-        ) {
-          this.props.history.push("/notfound");
+        if (!authUser || authUser.Id !== this.state.user.id){
+          this.props.history.push('/NotFound')
+        }
+        if (!course) {
+          this.props.history.push('/NotFound')
         }
       })
       .catch((err) => {
         console.log(err);
-        this.props.history.push("/error");
+        this.props.history.push('/error')
       });
-  }
+    }
 
   render() {
+    const { context } = this.props;
     const {
       title,
-      courseByFirstName,
-      courseByLastName,
       description,
       estimatedTime,
       materialsNeeded,
-      errors,
+      errors
     } = this.state;
 
     return (
@@ -90,7 +84,7 @@ export default class UpdateCourse extends Component {
                     />
                   </div>
                   <p>
-                    By{courseByFirstName} {courseByLastName}{" "}
+                    By {context.authenticatedUser.firstName + " " + context.authenticatedUser.lastName}
                   </p>
                 </div>
                 <div className="course--description">
@@ -146,9 +140,9 @@ export default class UpdateCourse extends Component {
     );
   }
 
-  change = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
+  change = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
 
     this.setState(() => {
       return {
@@ -157,34 +151,36 @@ export default class UpdateCourse extends Component {
     });
   };
 
-  update = () => {
+  submit = () => {
     const { context } = this.props;
-    const { emailAddress } = context.authenticatedUser;
-    const { password } = context.authenticatedUser;
+    const { emailAddress, password } = context.authenticatedUser;
+    const courseId = this.props.match.params.id;
 
     const {
-      courseId,
       title,
       description,
       estimatedTime,
       materialsNeeded,
+      user
     } = this.state;
 
-    const updatedCourse = {
+    const course = {
       title,
       description,
       estimatedTime,
       materialsNeeded,
+      user
     };
 
     context.data
-      .updateCourse(courseId, updatedCourse, emailAddress, password)
-      .then((errors) => {
-        if (errors.errors) {
-          this.setState({ errors: errors.errors });
+      .updateCourse(courseId, course, emailAddress, password)
+      .then(errors => {
+        if (errors.length > 0) {
+          this.setState({ errors });
+        } else if (errors.length === 0) {
+          this.props.history.push(`/courses/${courseId}`);
         } else {
-          const id = this.state.courseId;
-          this.props.history.push(`/courses/${id}`);
+          this.props.history.push('/NotFound');
         }
       })
       //errors
@@ -196,7 +192,7 @@ export default class UpdateCourse extends Component {
 
   // Cancel function
   cancel = () => {
-    const id = this.state.courseId;
-    this.props.history.push(`/courses/${id}`);
+    const courseId = this.props.match.params.id;
+    this.props.history.push(`/courses/${courseId}`);
   };
 }

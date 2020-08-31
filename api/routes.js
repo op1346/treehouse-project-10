@@ -115,9 +115,22 @@ router.post('/users', [
 
 // GET /api/course 200 - returns a list of courses (including the user that owns each course)
 router.get('/courses', asyncHandler(async(req, res) => {
-  const courses = await Course.findAll();
+  const courses = await Course.findAll({
+    attributes: {
+      exclude: ['createdAt', 'updatedAt']
+    },
+    include: {
+      model: User,
+      as: 'user',
+      attributes: ['id', 'firstName', 'lastName', 'emailAddress']
+    }
+  });
+  if (courses) {
     res.json(courses)
     res.status(200).end();
+  } else {
+    res.status(404).json({message: "No courses found."})
+  }
 }));
 
 // GET /api/course/:id 200 - returns the course (including the user that owns the course) for the provided course ID

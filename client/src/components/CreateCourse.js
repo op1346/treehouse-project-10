@@ -1,19 +1,23 @@
 import React, { Component } from "react";
 import Form from "./Form";
+import Data from '../Data';
 
 export default class CreateCourse extends Component {
   state = {
-    title: "",
-    description: "",
-    estimatedTime: "",
-    materialsNeeded: "",
-    userId: "",
-    firstName: "",
-    lastName: "",
-    emailAddress: "",
-    password: "",
+    title: '',
+    description:'',
+    estimatedTime:'',
+    materialsNeeded:'',
+    userId: '',
+    firstName: '',
+    lastName: '',
     errors: [],
   };
+
+  constructor() {
+    super()
+    this.data = new Data();
+  }
 
   componentDidMount() {
     const { context } = this.props;
@@ -28,7 +32,13 @@ export default class CreateCourse extends Component {
   }
 
   render() {
-    const { errors } = this.state;
+    const {
+      title,
+      description,
+      estimatedTime,
+      materialsNeeded,
+      errors,
+    } = this.state;
 
     return (
       <div className="bounds course--detail">
@@ -49,6 +59,7 @@ export default class CreateCourse extends Component {
                         id="title"
                         name="title"
                         type="text"
+                        value={title}
                         className="input-title course--title--input"
                         onChange={this.change}
                         placeholder="Course title..."
@@ -62,6 +73,7 @@ export default class CreateCourse extends Component {
                         id="description"
                         name="description"
                         type="text"
+                        value={description}
                         onChange={this.change}
                         placeholder="Course description..."
                       ></textarea>
@@ -78,6 +90,7 @@ export default class CreateCourse extends Component {
                             id="estimatedTime"
                             name="estimatedTime"
                             type="text"
+                            value={estimatedTime}
                             className="course--time--input"
                             onChange={this.change}
                             placeholder="Hours"
@@ -90,6 +103,7 @@ export default class CreateCourse extends Component {
                           <textarea
                             id="materialsNeeded"
                             name="materialsNeeded"
+                            value={materialsNeeded}
                             onChange={this.change}
                             placeholder="List materials..."
                           ></textarea>
@@ -119,18 +133,14 @@ export default class CreateCourse extends Component {
   //submit method
   submit = () => {
     const { context } = this.props;
-    const authUser = context.authenticatedUser;
-
-    const emailAddress = authUser.emailAddress;
-    const password = authUser.password;
+    const { emailAddress, password } = context.authenticatedUser;
 
     const {
       title,
       description,
       estimatedTime,
       materialsNeeded,
-      userId,
-      errors,
+      userId
     } = this.state;
 
     // Create course
@@ -139,19 +149,18 @@ export default class CreateCourse extends Component {
       description,
       estimatedTime,
       materialsNeeded,
-      userId,
-      errors,
+      userId
     };
     // New Course
     context.data
-      .createCourse(emailAddress, password, course)
-      .then((errors) => {
-        if (errors.length) {
+      .createCourse(course, emailAddress, password)
+      .then(errors => {
+        if (errors && errors.length > 0) {
           this.setState({ errors });
         } else {
           console.log("Course created");
           //get to courses main page
-          this.props.history.push("/courses");
+          this.props.history.push("/");
         }
       })
       .catch((err) => {
@@ -161,7 +170,6 @@ export default class CreateCourse extends Component {
   };
   // cancel method
   cancel = () => {
-    const { from } = this.props.location.state || { from: { pathname: "/" } };
-    this.props.history.push(from);
-  };
+    this.props.history.push('/');
+  }
 }

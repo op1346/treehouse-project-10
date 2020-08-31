@@ -80,7 +80,7 @@ export default class UserSignUp extends Component {
     });
   }
 
-  submit = (event) => {
+  submit = () => {
     const { context } = this.props;
 
     const {
@@ -99,7 +99,7 @@ export default class UserSignUp extends Component {
     };
     context.data.createUser(user)
       .then(errors => {
-        if (errors.length) {
+        if (errors && errors.length > 0) {
           this.setState({errors});
         } else {
           context.actions.signIn(emailAddress, password)
@@ -114,8 +114,7 @@ export default class UserSignUp extends Component {
       });
   }
 
-  cancel = (event) => {
-    event.preventDault();
+  cancel = () => {
     this.props.history.push('/');
   };
 }
