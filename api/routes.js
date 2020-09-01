@@ -61,7 +61,8 @@ router.get('/users', authenticateUser, asyncHandler(async(req, res) => {
   const user = req.currentUser;
   res.json({
     Id: user.id,
-    Name: `${user.firstName} ${user.lastName}`,
+    firstName: user.firstName,
+    lastName: user.lastName,
     Email: user.emailAddress
   });
   res.status(200).end();
@@ -115,7 +116,16 @@ router.post('/users', [
 
 // GET /api/course 200 - returns a list of courses (including the user that owns each course)
 router.get('/courses', asyncHandler(async(req, res) => {
-  const courses = await Course.findAll();
+  const courses = await Course.findAll({
+    attributes: {
+      exclude: ['createdAt', 'updatedAt']
+    },
+    include: {
+      model: User,
+      as: 'user',
+      attributes: ['id', 'firstName', 'lastName', 'emailAddress']
+    }
+  });
   if (courses) {
     res.json(courses)
     res.status(200).end();
