@@ -175,10 +175,8 @@ export default class UpdateCourse extends Component {
     context.data
       .updateCourse(courseId, course, emailAddress, password)
       .then(errors => {
-        if (errors.length > 0) {
+        if (errors.length) {
           this.setState({ errors });
-        } else if (errors.length === 0) {
-          this.props.history.push(`/courses/${courseId}`);
         } else {
           this.props.history.push('/NotFound');
         }

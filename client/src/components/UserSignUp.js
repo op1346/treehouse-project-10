@@ -99,7 +99,7 @@ export default class UserSignUp extends Component {
     };
     context.data.createUser(user)
       .then(errors => {
-        if (errors && errors.length > 0) {
+        if (errors.length) {
           this.setState({errors});
         } else {
           context.actions.signIn(emailAddress, password)
