@@ -3,11 +3,6 @@ import Form from "./Form";
 import Data from '../Data';
 
 export default class CreateCourse extends Component {
-  constructor() {
-    super()
-    this.data = new Data();
-  }
-
   state = {
     title: '',
     description:'',
@@ -17,6 +12,11 @@ export default class CreateCourse extends Component {
     name: '',
     errors: [],
   };
+
+  constructor() {
+    super()
+    this.data = new Data();
+  }
 
   componentDidMount() {
     const { context } = this.props;
