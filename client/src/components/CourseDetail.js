@@ -57,8 +57,7 @@ export default class CourseDetail extends Component {
                     <React.Fragment>
                       <Link
                         className="button"
-                        to={`/courses/${courseId}/update`}
-                      >
+                        to={`/courses/${courseId}/update`}>
                         Update Course
                       </Link>
                       <Link
@@ -114,5 +113,29 @@ export default class CourseDetail extends Component {
         </div>
       </div>
     );
+  }
+}
+
+
+deleteCourse = () => {
+  const { context } = this.props;
+  const courseId = this.props.match.params.id;
+
+  if (context.authenticatedUser) {
+    const { emailAddress, password } = context.authenticatedUser;
+
+    context.data
+      .deleteCourse(courseId, emailAddress, password)
+      .then(errors => {
+        if (errors && errors.length > 0) {
+          this.setState({ errors });
+        } else {
+          this.props.history.push('/')
+        }
+      })
+      .catch( err => {
+        console.log(err);
+        this.props.history.push('/error');
+      });
   }
 }

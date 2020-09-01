@@ -106,7 +106,7 @@ export default class Data {
     } else if (response.status === 403) {
       return response.json().then(data => {
         return data.errors;
-      })
+      });
     } else {
       throw new Error();
     }

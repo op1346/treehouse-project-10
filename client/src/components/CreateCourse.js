@@ -3,21 +3,20 @@ import Form from "./Form";
 import Data from '../Data';
 
 export default class CreateCourse extends Component {
+  constructor() {
+    super()
+    this.data = new Data();
+  }
+
   state = {
     title: '',
     description:'',
     estimatedTime:'',
     materialsNeeded:'',
     userId: '',
-    firstName: '',
-    lastName: '',
+    name: '',
     errors: [],
   };
-
-  constructor() {
-    super()
-    this.data = new Data();
-  }
 
   componentDidMount() {
     const { context } = this.props;
@@ -25,8 +24,7 @@ export default class CreateCourse extends Component {
     this.setState(() => {
       return {
         userId: context.authenticatedUser.id,
-        firstName: context.authenticatedUser.firstName,
-        lastName: context.authenticatedUser.lastName,
+        name: context.authenticatedUser.Name
       };
     });
   }
@@ -65,7 +63,7 @@ export default class CreateCourse extends Component {
                         placeholder="Course title..."
                       />
                     </div>
-                    <p>By {this.state.firstName + " " + this.state.lastName}</p>
+                    <p>By {this.state.name}</p>
                   </div>
                   <div className="course--description">
                     <div>

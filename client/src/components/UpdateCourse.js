@@ -11,7 +11,7 @@ export default class UpdateCourse extends Component {
       description: "",
       estimatedTime: "",
       materialsNeeded: "",
-      user: '',
+      user: "",
       userId: "",
       errors: [],
     }
@@ -36,7 +36,7 @@ export default class UpdateCourse extends Component {
             userId: course.userId
           });
         }
-        if (!authUser || authUser.Id !== this.state.user.id){
+        if (!authUser || authUser.id !== this.state.user.id){
           this.props.history.push('/NotFound')
         }
         if (!course) {
@@ -65,7 +65,7 @@ export default class UpdateCourse extends Component {
         <Form
           cancel={this.cancel}
           errors={errors}
-          submit={this.update}
+          submit={this.submit}
           submitButtonText="Update Course"
           elements={() => (
             <React.Fragment>
@@ -84,7 +84,7 @@ export default class UpdateCourse extends Component {
                     />
                   </div>
                   <p>
-                    By {context.authenticatedUser.firstName + " " + context.authenticatedUser.lastName}
+                    By {context.authenticatedUser.Name}
                   </p>
                 </div>
                 <div className="course--description">
