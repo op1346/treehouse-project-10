@@ -185,10 +185,7 @@ router.put('/courses/:id', [
     .withMessage('Please provide a value for "title"'),
   check('description')
     .exists()
-    .withMessage('Please provide a value for "description"'),
-  check('userId')
-    .exists()
-    .withMessage('Please provide a value for "userID"'),
+    .withMessage('Please provide a value for "description"')
 ], authenticateUser, asyncHandler(async(req, res) => {
   const errors = validationResult(req);
 

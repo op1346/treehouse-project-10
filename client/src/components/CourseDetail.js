@@ -19,6 +19,7 @@ export default class CourseDetail extends Component {
   async componentDidMount() {
     const { context } = this.props;
     const { id } = this.props.match.params;
+
     context.data
       .getCourseDetails(id)
       .then(response => {
@@ -91,7 +92,7 @@ export default class CourseDetail extends Component {
               </p>
             </div>
             <div className="course--description">
-              <ReactMarkdown>{this.state.description}</ReactMarkdown>
+              <ReactMarkdown source={this.state.description}/>
             </div>
           </div>
           <div className="grid-25 grid-right">
@@ -112,9 +113,8 @@ export default class CourseDetail extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
-}
 
 
 deleteCourse = () => {
@@ -137,5 +137,6 @@ deleteCourse = () => {
         console.log(err);
         this.props.history.push('/error');
       });
+    }
   }
 }
