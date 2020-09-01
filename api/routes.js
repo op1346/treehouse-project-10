@@ -91,7 +91,7 @@ router.post('/users', [
         return res.status(400).json({ errors: errorMessages });
       }
       const emailExists = await User.findOne({
-        where: {emailAddress: req.body.emailAddress,}
+        where: {emailAddress: req.body.emailAddress}
       });
       // If the email exists
       if(emailExists) {
